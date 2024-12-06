@@ -17,7 +17,6 @@ namespace TicTacToe_JoelMarkgren
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private string ScorBordText { get; set; }
 
 		private GameLogic gameHandler;
 
@@ -25,6 +24,7 @@ namespace TicTacToe_JoelMarkgren
 		{
 			InitializeComponent();
 			gameHandler = new GameLogic();
+			DataContext = gameHandler;
 		}
 
 
@@ -42,14 +42,16 @@ namespace TicTacToe_JoelMarkgren
 					btn.IsEnabled = false;
 				}
 				if (gameHandler.GameIsWon(CellState.X))
-				{
-					MessageBox.Show("You Win");
+				{		
+					MessageBox.Show("Du vann");
+					gameHandler.NumberOfYourWins++;
 					ResetGame();
 					return;
 				}
 				if (gameHandler.IsBoardFull())
 				{
-					MessageBox.Show("Tied");
+					MessageBox.Show("Oavgjort");
+					gameHandler.NumberOfTies++;
 					ResetGame();
 					return;
 				}
@@ -69,7 +71,8 @@ namespace TicTacToe_JoelMarkgren
 
 					if (gameHandler.GameIsWon(CellState.O))
 					{
-						MessageBox.Show("Computer Win");
+						MessageBox.Show("Datorn vann");
+						gameHandler.NumberOfComputerWins++;
 						ResetGame();
 						return;
 					}

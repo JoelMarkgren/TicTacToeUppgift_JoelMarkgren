@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -14,16 +15,34 @@ namespace TicTacToe_JoelMarkgren
 		O,
 		Free
 	}
-	public class GameLogic
+	public class GameLogic : BaseClass
 	{
 		private CellState[,] Board = new CellState[3, 3];
 
 		private bool YourTurn = true;
 
+		public int NumberOfComputerWins = 0;
+
+		public int NumberOfYourWins = 0;
+
+		public int NumberOfTies = 0;
+
+		private string scoreBoardText;
+
+		public string ScoreBoardText
+		{
+			get { return scoreBoardText; }
+			set { scoreBoardText = value;
+				RaisePropertyChanged();
+			}
+		}
+
+
 
 		public GameLogic()
 		{
 			ResetBoard();
+			ScoreBoardText = $"Dina vinster: {NumberOfYourWins} -  Datorns vinster: {NumberOfComputerWins} - Antalet oavgjorda: {NumberOfTies}";
 		}
 
 
@@ -36,6 +55,7 @@ namespace TicTacToe_JoelMarkgren
 					Board[i, j] = CellState.Free;
 				}
 			}
+			ScoreBoardText = $"Dina vinster: {NumberOfYourWins} -  Datorns vinster: {NumberOfComputerWins} - Antalet oavgjorda: {NumberOfTies}";
 		}
 		public bool GameIsWon(CellState player)
 		{
@@ -63,6 +83,23 @@ namespace TicTacToe_JoelMarkgren
 				return true;
 			}
 			return false;
+		}
+
+		public void UpdateStatistics(CellState player)
+		{
+			if (GameIsWon(CellState.X))
+			{
+				NumberOfYourWins++;
+			}
+			if (GameIsWon(CellState.O))
+			{
+				NumberOfComputerWins++;
+			}
+			if (IsBoardFull())
+			{
+				NumberOfTies++;
+			}
+			
 		}
 
 		public bool PlayerTurn(int row, int col)
